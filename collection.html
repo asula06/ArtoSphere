@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Collection — Gallery</title>
+
+  
+  <link rel="stylesheet" href="styles/style.css">
+
+ 
+  <link rel="stylesheet" href="collection.css">
+</head>
+<body>
+<!--Navigation bar-->
+    <header>
+        <nav class="navbar">
+            <div class="nav-left">
+                <a href="index.html">Home</a>
+                <a href="collection.html">Collection</a>
+                <a href="gallery.html">Gallery auction</a>
+            </div>
+            
+            <div class="nav-center">ArtoSphere</div>
+
+            <div class="nav-right">
+                <a href="favourites.html">Favourites</a>
+                <a href="cart.html">Shopping cart</a>
+                <a href="about.html">About us</a>
+            </div>
+
+            <!-- Hamburger for mobile -->
+            <button class="hamburger" aria-label="Open menu" aria-expanded="false">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </nav>
+
+        <!-- Mobile dropdown (keeps same links & style) -->
+        <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="collection.html">Collection</a>
+                <a href="gallery.html">Gallery auction</a>
+                <a href="favourites.html">Favourites</a>
+                <a href="cart.html">Shopping cart</a>
+                <a href="about.html">About us</a>
+            </nav>
+        </div>
+    </header>
+      <!-- HERO IMAGE -->
+  <section class="hero-collection">
+    <img src="img/collection2.jpg" alt="Collection header" class="collection-image">
+    <div class="text-over-image">Collection</div>
+  </section>
+   
+  <!-- NAV -->
+  <nav class="nav">
+ 
+    <a href="#">All</a>
+    <a href="#">Ancient</a>
+    <a href="#">Medieval</a>
+    <a href="#">Renaissance</a>
+    <a href="#">Baroque</a>
+    <a href="#">Neoclassicism</a>
+    <a href="#">Romantic</a>
+
+    <div class="dropdown">
+      <a href="#">Modern</a>
+      <ul class="dropdown-menu">
+        <li><a href="#">-Abstract</a></li>
+        <li><a href="#">-Expressionism</a></li>
+        <li><a href="#">-Surrealism</a></li>
+        <li><a href="#">-Contemporary </a></li>
+        <li><a href="#">-Realism</a></li>
+        <li><a href="#">-Impressionism</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- GALLERY -->
+  <main class="card-container" id="gallery">
+
+    <!-- ANCIENT (portrait style, taller) -->
+    <article class="photo-card card-tall"
+  data-category="ancient"
+  data-title="Fayum Portrait (anonymous)"
+  data-artist="Unknown (Greco-Roman painter, 1st–3rd century AD)"
+  data-period="Ancient"
+  data-date="1st–3rd century AD"
+  data-classification="Encaustic painting on wood panel"
+  data-dimensions="—"
+  data-location="Collections such as the British Museum, the Met, the Louvre"
+  data-price="$12800"
+  data-text="This portrait, created using the encaustic technique, depicts a young aristocratic woman with a vivid gaze and luxurious jewelry. The realistic modeling, large expressive eyes, and detailed ornaments are characteristic of the Fayum portraits, which blend Egyptian funerary tradition with Greek and Roman artistic influence. It originally served as a funerary portrait placed over the face of a mummy, meant to show the person 'alive' in the afterlife.">
+
+  <a class="thumb">
+    <img src="img/collection4.jpg" alt="Fayum portrait">
+    <div class="overlay"><span class="view-text">VIEW</span></div>
+  </a>
+  <div class="card-body">
+    <h3 class="card-title">Fayum Portrait</h3>
+    <p class="card-category">Ancient</p>
+  </div>
+</article>
+    <!-- Maestà -->
+<article class="photo-card maesta-card"
+data-category="medieval"
+  data-title="Maestà"
+  data-artist="Duccio di Buoninsegna"
+  data-period="Medieval"
+  data-date="1311"
+  data-classification="Tempera and gold on wood"
+  data-dimensions="213×396 cm"
+  data-location="Museo dell’Opera del Duomo, Siena"
+   data-price="$20000"
+  data-text="Description:
+Duccio’s Maestà is one of the greatest masterpieces of early Italian painting. Created for the high altar of Siena Cathedral, it portrays the Virgin Mary seated majestically with the Christ Child, surrounded by angels and saints arranged in a harmonious, luminous composition. The work blends the spiritual intensity of Byzantine iconography with the growing naturalism of the Proto-Renaissance, marking a turning point in Western art.">
+  <a class="thumb">
+      <img src="img/collection8.jpg" alt="">
+      <div class="overlay"><span class="view-text">View</span></div>
+  </a>
+  <div class="card-body">
+      <h3 class="card-title">Maestà</h3>
+      <p class="card-category">Medieval</p>
+  </div>
+</article>
+    <!-- RENAISSANCE (Mona) -->
+ <article class="photo-card card-tall"
+  data-category="renaissance"
+  data-title="Mona Lisa (La Gioconda)"
+  data-artist="Leonardo da Vinci"
+  data-period="Renaissance"
+  data-date="1503–1506"
+  data-classification="Oil on poplar panel"
+  data-dimensions="77 × 53 cm (approx.)"
+  data-location="Musée du Louvre, Paris"
+   data-price="$100000"
+  data-text="Leonardo da Vinci’s Mona Lisa is the world’s most famous painting, celebrated for its enigmatic smile and masterful sfumato. The portrait shows a seated woman before a dreamlike landscape; the soft blending of tones gives her lifelike depth. Her subtle expression and calm posture create a sense of mystery and harmony, making this work a pinnacle of Renaissance portraiture.">
+  <a class="thumb">
+    <img src="img/collection12.jpg" alt="Mona Lisa">
+    <div class="overlay"><span class="view-text">VIEW</span></div>
+  </a>
+  <div class="card-body">
+    <h3 class="card-title">Mona Lisa</h3>
+    <p class="card-category">Renaissance</p>
+  </div>
+</article>
+    <!-- ROCOCO -->
+    <article class="photo-card"
+  data-category="rococo"
+  data-title="The Swing (Les Hasards Heureux de l'Escarpolette)"
+  data-artist="Jean-Honoré Fragonard"
+  data-period="Rococo"
+  data-date="1767"
+  data-classification="Oil on canvas"
+  data-dimensions="81 × 64 cm (approx.)"
+  data-location="Wallace Collection, London"
+   data-price="$150000"
+  data-text="Fragonard’s The Swing is a joyful icon of the Rococo era. A young woman, pushed on a swing by an older man, is secretly watched by her admirer hidden below. The lush garden, playful movement and shimmering pink dress capture the spirit of flirtation, elegance and aristocratic leisure before the French Revolution.">
+  <a class="thumb">
+    <img src="img/collection13.jpg" alt="The Swing">
+    <div class="overlay"><span class="view-text">VIEW</span></div>
+  </a>
+  <div class="card-body">
+    <h3 class="card-title">The Swing</h3>
+    <p class="card-category">Rococo</p>
+  </div>
+</article>
+    <!-- BAROQUE -->
+    <article class="photo-card"
+      data-category="baroque"
+      data-title="The Night Watch"
+      data-artist="Rembrandt van Rijn"
+      data-period="Baroque"
+      data-date="1642"
+      data-classification="Oil on canvas"
+      data-dimensions="363 × 437 cm"
+      data-location="Rijksmuseum, Amsterdam"
+       data-price="$50000"
+      data-text="Rembrandt transforms a traditional militia group portrait into a dramatic scene filled with light, shadow and movement. Captain Frans Banning Cocq and his guards appear to step forward into our space, illuminated by a golden beam that cuts through the darkness. The dynamic composition and psychological detail make The Night Watch one of the masterpieces of Dutch Golden Age painting.">
+      <a class="thumb">
+        <img src="img/collection1.jpg" alt="The Night Watch">
+        <div class="overlay"><span class="view-text">VIEW</span></div>
+      </a>
+      <div class="card-body">
+        <h3 class="card-title">The Night Watch</h3>
+        <p class="card-category">Baroque</p>
+      </div>
+    </article>
+    <!-- NEOCLASSICISM -->
+    <article class="photo-card"
+      data-category="neoclassicism"
+      data-title="Oath of the Horatii"
+      data-artist="Jacques-Louis David"
+      data-period="Neoclassicism"
+      data-date="1784–1785"
+      data-classification="Oil on canvas"
+      data-dimensions="329 × 424 cm"
+      data-location="Musée du Louvre, Paris"
+       data-price="$200000"
+      data-text="In Oath of the Horatii, David presents three Roman brothers swearing to defend their city, while the women collapse in grief to the side. Clear outlines, classical architecture and a limited color palette give the work a severe dignity. Painted on the eve of the French Revolution, the picture became a symbol of civic virtue, sacrifice and moral duty.">
+      <a class="thumb">
+        <img src="img/collection9.jpg" alt="Oath of the Horatii">
+        <div class="overlay"><span class="view-text">VIEW</span></div>
+      </a>
+      <div class="card-body">
+        <h3 class="card-title">Oath of the Horatii</h3>
+        <p class="card-category">Neoclassicism</p>
+      </div>
+    </article>
+    <!-- ROMANTIC -->
+   <article class="photo-card liberty-card"
+      data-category="romanticism"
+      data-title="Liberty Leading the People"
+      data-artist="Eugène Delacroix"
+      data-period="Romanticism"
+      data-date="1830"
+      data-classification="Oil on canvas"
+      data-dimensions="260 × 325 cm"
+      data-location="Musée du Louvre, Paris"
+       data-price="$400000"
+      data-text="Delacroix personifies Liberty as a barefoot woman carrying the tricolour flag and leading a crowd over the barricades of the July Revolution in Paris. Smoke, bodies and diagonals fill the canvas, creating a sense of urgency and emotion. The painting combines political reality with allegory and became an enduring symbol of freedom and popular uprising.">
+      <a class="thumb">
+        <img src="img/collection14.jpg" alt="Liberty Leading the People">
+        <div class="overlay"><span class="view-text">VIEW</span></div>
+      </a>
+      <div class="card-body">
+        <h3 class="card-title">Liberty Leading the People</h3>
+        <p class="card-category">Romanticism</p>
+      </div>
+    </article>
+    <!-- IMPRESSIONISM (tall art) -->
+    <article class="photo-card card-tall"
+      data-category="impressionism"
+      data-title="The Starry Night"
+      data-artist="Vincent van Gogh"
+      data-period="Post-Impressionism"
+      data-date="1889"
+      data-classification="Oil on canvas"
+      data-dimensions="73.7 × 92.1 cm"
+      data-location="Museum of Modern Art, New York"
+       data-price="$550000"
+      data-text="The Starry Night shows a swirling night sky above a quiet village, painted with thick, energetic strokes of blue and yellow. The cypress tree in the foreground rises like a dark flame, linking earth and sky. Van Gogh transforms a simple view from his asylum window into a powerful image of inner emotion, turbulence and hope.">
+      <a class="thumb">
+        <img src="img/collection5.jpg" alt="The Starry Night">
+        <div class="overlay"><span class="view-text">VIEW</span></div>
+      </a>
+      <div class="card-body">
+        <h3 class="card-title">The Starry Night</h3>
+        <p class="card-category">Impressionism</p>
+      </div>
+    </article>
+    <!-- EXPRESSIONISM -->
+    <article class="photo-card"
+      data-category="expressionism"
+      data-title="The Scream"
+      data-artist="Edvard Munch"
+      data-period="Expressionism"
+      data-date="1893 (multiple versions)"
+      data-classification="Tempera, pastel and oil on board"
+      data-dimensions="91 × 73.5 cm (approx.)"
+      data-location="National Museum & Munch Museum, Oslo"
+       data-price="$72000"
+      data-text="A figure stands on a bridge, hands pressed to its face, while the sky burns with waves of red, orange and blue. In The Scream, Munch turns a personal moment of anxiety into a universal symbol of fear and alienation. Curving lines and unnatural colors express emotion more than reality, anticipating the Expressionist movement of the 20th century.">
+      <a class="thumb">
+        <img src="img/collection3.jpg" alt="The Scream">
+        <div class="overlay"><span class="view-text">VIEW</span></div>
+      </a>
+      <div class="card-body">
+        <h3 class="card-title">The Scream</h3>
+        <p class="card-category">Expressionism</p>
+      </div>
+    </article>
+    <!-- SURREALISM -->
+    <article class="photo-card card-tall"
+      data-category="surrealism"
+      data-title="The Persistence of Memory"
+      data-artist="Salvador Dalí"
+      data-period="Surrealism"
+      data-date="1931"
+      data-classification="Oil on canvas"
+      data-dimensions="24 × 33 cm"
+      data-location="Museum of Modern Art, New York"
+       data-price="$25500"
+      data-text="Dalí sets his famous soft, melting watches in a barren coastal landscape inspired by his native Catalonia. The tiny scale of the painting contrasts with the vast sense of dreamlike space. By turning solid timepieces into fragile, drooping forms, the artist suggests that time, memory and reality are fluid and unstable, like images in a dream.">
+      <a class="thumb">
+        <img src="img/collection15.jpg"The Persistence of Memory">
+        <div class="overlay"><span class="view-text">VIEW</span></div>
+      </a>
+      <div class="card-body">
+        <h3 class="card-title">The Persistence of Memory</h3>
+        <p class="card-category">Surrealism</p>
+      </div>
+    </article>
+    <!-- CONTEMPORARY (Marilyn) — corrected category -->
+    <article class="photo-card"
+      data-category="contemporary"
+      data-title="Marilyn Diptych (detail)"
+      data-artist="Andy Warhol"
+      data-period="Contemporary / Pop Art"
+      data-date="1962"
+      data-classification="Silkscreen ink and acrylic on canvas"
+      data-dimensions="Multiple-panel work"
+      data-location="Tate, London (and other collections)"
+       data-price="$470000"
+      data-text="Warhol repeats the face of movie star Marilyn Monroe in bright, artificial colors taken from mass-produced publicity photos. The mechanical silkscreen technique and grid structure recall advertising and consumer packaging. By repeating and fading the image, the work reflects both the glamour and the fragility of celebrity culture in the age of mass media.">
+      <a class="thumb">
+        <img src="img/collection6.jpg" alt="Marilyn">
+        <div class="overlay"><span class="view-text">VIEW</span></div>
+      </a>
+      <div class="card-body">
+        <h3 class="card-title">Marilyn</h3>
+        <p class="card-category">Contemporary</p>
+      </div>
+    </article>
+    <!-- ABSTRACT -->
+    <article class="photo-card"
+      data-category="abstract"
+      data-title="Abstract Composition"
+      data-artist="Modern abstract painter"
+      data-period="Modern / Abstract"
+      data-date="20th century"
+      data-classification="Oil or acrylic on canvas"
+      data-dimensions="Variable"
+      data-location="Private or museum collections"
+       data-price="$310000"
+      data-text="This abstract composition replaces recognizable figures with pure color, line and shape. Contrasting blocks and gestures of paint create rhythm and balance across the surface, inviting the viewer to respond emotionally rather than read a literal story. Such works helped redefine painting as an arena for personal expression and experimentation in the 20th century.">
+      <a class="thumb">
+        <img src="img/collection16.jpg" alt="Abstract composition">
+        <div class="overlay"><span class="view-text">VIEW</span></div>
+      </a>
+      <div class="card-body">
+        <h3 class="card-title">Abstract Composition</h3>
+        <p class="card-category">Abstract</p>
+      </div>
+    </article>
+    <!-- ANOTHER ANCIENT (villa) -->
+    <article class="photo-card card-wide"
+      data-category="ancient"
+      data-title="Frescoes of the Villa of the Mysteries"
+      data-artist="Unknown Roman painter"
+      data-period="Ancient Roman"
+      data-date="1st century BC – 1st century AD"
+      data-classification="Fresco"
+      data-dimensions="Room-sized wall cycle"
+      data-location="Villa dei Misteri, Pompeii, Italy"
+       data-price="$100000"
+      data-text="The famous fresco cycle in the Villa of the Mysteries wraps around the walls of a room decorated in a deep Pompeian red. Life-size figures act out a mysterious ritual, probably connected to the cult of Dionysus. Elegant drapery, strong gestures and dramatic gazes make the viewer feel like a silent witness to an initiation scene filled with drama, spirituality and transformation.">
+      <a class="thumb">
+        <img src="img/collection10.jpg" alt="Villa dei Misteri">
+        <div class="overlay"><span class="view-text">VIEW</span></div>
+      </a>
+      <div class="card-body">
+        <h3 class="card-title">Villa dei Misteri</h3>
+        <p class="card-category">Ancient</p>
+      </div>
+    </article>
+
+    <article class="photo-card "
+      data-category="medieval"
+      data-title="Fra Angelico – Annunciation (detail)"
+      data-artist="Fra Angelico"
+      data-period="Late Medieval / Early Renaissance"
+      data-date="c. 1440–1445"
+      data-classification="Tempera on panel or fresco"
+      data-dimensions="Various versions"
+      data-location="Museo di San Marco, Florence (and other sites)"
+       data-price="$15800"
+      data-text="Fra Angelico is known for serene religious images that combine Gothic elegance with the new spatial clarity of the early Renaissance. In his Annunciation scenes, the Virgin and the angel meet in a calm, luminous loggia framed by slim columns and arches. Soft colors, gentle expressions and careful light express a sense of spiritual grace and quiet contemplation.">
+      <a class="thumb">
+        <img src="img/collection7.jpg" alt="Fra Angelico">
+        <div class="overlay"><span class="view-text">VIEW</span></div>
+      </a>
+      <div class="card-body ">
+        <h3 class="card-title">Fra Angelico</h3>
+        <p class="card-category">Medieval</p>
+      </div>
+    </article>
+
+    <article class="photo-card g-card"
+  data-category="realism"
+  data-title="The Gleaners"
+  data-artist="Jean-François Millet"
+  data-period="Realism"
+  data-date="1857"
+  data-classification="Oil on canvas"
+  data-dimensions="83.5 × 111 cm"
+  data-location="Musée d'Orsay, Paris"
+   data-price="$23000"
+  data-text="Millet’s iconic painting shows three peasant women bent over as they collect leftover grains after the harvest. Painted with warm earth tones and quiet dignity, the scene honors the hard labor of the rural poor. The work became a landmark of Realism for its focus on ordinary workers, presented with empathy and monumental presence.">
+
+  <a class="thumb">
+    <img src="img/collection11.jpg" alt="The Gleaners">
+    <div class="overlay"><span class="view-text">VIEW</span></div>
+  </a>
+
+  <div class="card-body">
+    <h3 class="card-title">The Gleaners</h3>
+    <p class="card-category">Realism</p>
+  </div>
+</article>
+  </main>
+ <!-- ART DETAIL MODAL -->
+
+<div id="artModal" class="art-modal" aria-hidden="true">
+  <div class="art-modal__inner">
+
+    <button class="art-modal__close" id="artModalClose" aria-label="Close">
+      &times;
+    </button>
+
+    <div class="art-modal__content">
+      <!-- IMAGES LARGE -->
+      <div class="art-modal__image-wrap">
+        <img id="artModalImage" src="" alt="">
+      </div>
+
+      <!-- RIGHT INFO PANEL -->
+      <aside class="art-modal__meta">
+        <div class="art-modal__header-row">
+          <div>
+            <h2 id="artModalTitle" class="art-modal__title"></h2>
+            <p id="artModalPeriod" class="art-modal__period"></p>
+          </div>
+
+          <div class="art-modal__actions">
+            <button class="icon-btn heart-btn" type="button" aria-label="Add to favorites">
+              &#9829;
+            </button>
+            <button class="icon-btn cart-btn" type="button" aria-label="Add to cart">
+              &#128717;
+            </button>
+          </div>
+        </div>
+
+        <dl class="art-modal__meta-list">
+          <div>
+            <dt>Date</dt>
+            <dd id="artModalDate"></dd>
+          </div>
+          <div>
+            <dt>Artist</dt>
+            <dd id="artModalArtist"></dd>
+          </div>
+          <div>
+            <dt>Price</dt>
+            <dd id="artModalPrice"></dd>
+          </div>
+          <div>
+            <dt>Classification</dt>
+            <dd id="artModalClassification"></dd>
+          </div>
+          <div>
+            <dt>Dimensions</dt>
+            <dd id="artModalDimensions"></dd>
+          </div>
+          <div>
+            <dt>Gallery Location</dt>
+            <dd id="artModalLocation"></dd>
+          </div>
+        </dl>
+      </aside>
+    </div>
+
+    <!-- TEXT POSHTE -->
+    <div class="art-modal__text" id="artModalText"></div>
+  </div>
+</div>
+
+ <script src="collection.js"></script>
+
+</body>
+</html>
