@@ -1,14 +1,32 @@
-// Slide data
-const slideData = [
-    {  date: "1508–1512",title: "The Creation of Adam" },
-    {  date: "1563",title: "The Tower of Babel" },
-    {  date: "1931" ,title: "The Persistence of Memory"}
-];
-
-//Tregon cili slide eshte aktiv
-//Fillon nga i pari
+// Slide data - will be fetched from API
+let slideData = [];
 let slideIndex = 0;
-showSlide(slideIndex);
+
+// Initialize and fetch artworks
+async function initializeSlideshow() {
+    try {
+        const artworks = await ArtworkAPI.getAllArtworks();
+        if (artworks.length > 0) {
+            slideData = artworks.slice(0, 3).map(art => ({
+                date: art.createdDate,
+                title: art.title
+            }));
+        } else {
+            // Fallback if no data
+            slideData = [
+                { date: "1508–1512", title: "The Creation of Adam" },
+                { date: "1563", title: "The Tower of Babel" },
+                { date: "1931", title: "The Persistence of Memory" }
+            ];
+        }
+        showSlide(slideIndex);
+    } catch (error) {
+        console.error("Error initializing slideshow:", error);
+    }
+}
+
+// Load slideshow on page load
+document.addEventListener('DOMContentLoaded', initializeSlideshow);
 
 // Change with arrows
 function changeSlide(n) {
@@ -68,17 +86,16 @@ setInterval(() => {
     showSlide(slideIndex);
 }, 10000);
 
-// --- Dot Click Events ---
-let dots = document.querySelectorAll(".dot");
-dots.forEach((dot, index) => {
-    dot.addEventListener("click", () => {
-        slideIndex = index;
-        showSlide(slideIndex);
-    });
-});
-
 // Mobile hamburger + nav active behavior
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Dot Click Events (moved inside DOMContentLoaded) ---
+    let dots = document.querySelectorAll(".dot");
+    dots.forEach((dot, index) => {
+        dot.addEventListener("click", () => {
+            slideIndex = index;
+            showSlide(slideIndex);
+        });
+    });
     const hamburger = document.querySelector('.hamburger');
     const mobileMenu = document.getElementById('mobileMenu');
     const navLinks = Array.from(document.querySelectorAll('.navbar a:not(.nav-center)'));
@@ -152,34 +169,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     setActiveByPath();
-});
-// ...existing code...
 
-// Add to Cart functionality for collection page
-document.addEventListener('DOMContentLoaded', () => {
+    // Add to Cart functionality
     document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', async (e) => {
             e.preventDefault();
             
-            const product = {
-                name: btn.getAttribute('data-name'),
-                artist: btn.getAttribute('data-artist'),
-                price: btn.getAttribute('data-price'),
-                image: btn.getAttribute('data-image'),
-                id: Date.now()
-            };
-
-            // Get existing cart from localStorage
-            let cart = JSON.parse(localStorage.getItem('artoSphereCart')) || [];
+            const artworkId = parseInt(btn.getAttribute('data-id'));
+            const result = await CartAPI.addToCart(artworkId);
             
-            // Add new product to cart
-            cart.push(product);
-            
-            // Save updated cart to localStorage
-            localStorage.setItem('artoSphereCart', JSON.stringify(cart));
-            
-            // Show confirmation
-            alert(`${product.name} added to cart!`);
+            if (result) {
+                alert('Added to cart!');
+            } else {
+                alert('Error adding to cart');
+            }
         });
     });
 });

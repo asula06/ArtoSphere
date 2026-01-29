@@ -92,8 +92,9 @@ function findCategoryKey(label) {
   return null;
 }
 
-// Setup card icons (heart + cart buttons)
+// Setup card icons (heart + cart buttons) - Uses API for favorites and cart
 function setupCardIcons() {
+  const userId = "default-user";
   const cards = document.querySelectorAll(".photo-card");
 
   cards.forEach(card => {
@@ -102,89 +103,75 @@ function setupCardIcons() {
     if (thumbEl && !card.querySelector(".card-actions")) {
       const actions = document.createElement("div");
       actions.className = "card-actions";
+      const artworkId = Number(card.dataset.id);
 
-      // Heart button - go to favorites
+      // Heart button - add/remove from favorites via API
       const heartBtn = document.createElement("button");
       heartBtn.type = "button";
       heartBtn.className = "icon-btn heart-btn";
       heartBtn.innerHTML = "&#9829;";
       heartBtn.setAttribute("aria-label", "Add to favorites");
 
-      // mark active if already in favorites
-      try {
-        const favs = JSON.parse(localStorage.getItem('artoSphereFavorites')) || [];
-        const pid = card.dataset.id || card.dataset.title || (card.querySelector('img')?.src || '');
-        const found = favs.find(it => (it.id && pid && it.id === pid) || it.name === card.dataset.title);
-        if (found) heartBtn.classList.add('is-active');
-      } catch (e) {}
+      // Check if in favorites
+      if (card.dataset.isFavorite === 'true') {
+        heartBtn.classList.add('is-active');
+      }
 
-      heartBtn.addEventListener("click", (e) => {
+      heartBtn.addEventListener("click", async (e) => {
         e.stopPropagation();
-        // Toggle favorites in localStorage
-        const favKey = 'artoSphereFavorites';
-        const product = {
-          id: card.dataset.id || card.dataset.title || (card.querySelector('img')?.src || ''),
-          name: card.dataset.title || 'Artwork',
-          artist: card.dataset.artist || 'Unknown Artist',
-          price: card.dataset.price || '',
-          image: card.querySelector('img')?.src || 'img/default.jpg'
-        };
-        let favs = JSON.parse(localStorage.getItem(favKey)) || [];
-        const idx = favs.findIndex(it => (it.id && product.id && it.id === product.id) || it.name === product.name);
-        if (idx >= 0) {
-          // remove
-          favs.splice(idx, 1);
-          heartBtn.classList.remove('is-active');
+        
+        if (heartBtn.classList.contains('is-active')) {
+          // Remove from favorites - need favoriteId from server
+          const favoriteId = card.dataset.favoriteId;
+          if (favoriteId) {
+            try {
+              await FavoritesAPI.removeFromFavorites(Number(favoriteId));
+              heartBtn.classList.remove('is-active');
+              card.dataset.isFavorite = 'false';
+            } catch (error) {
+              console.error('Error removing from favorites:', error);
+              alert('Failed to remove from favorites');
+            }
+          }
         } else {
-          favs.push(product);
-          heartBtn.classList.add('is-active');
+          // Add to favorites via API
+          try {
+            const favorite = await FavoritesAPI.addToFavorites(artworkId);
+            heartBtn.classList.add('is-active');
+            card.dataset.isFavorite = 'true';
+            card.dataset.favoriteId = favorite.id;
+          } catch (error) {
+            console.error('Error adding to favorites:', error);
+            alert('Failed to add to favorites');
+          }
         }
-        localStorage.setItem(favKey, JSON.stringify(favs));
-        // update nav counters if available
-        try { updateFavoritesCounter(); } catch(e) {}
+        updateFavoritesCounter();
       });
 
-      // Cart button - add to cart (localStorage)
+      // Cart button - add to cart via API
       const cartBtn = document.createElement("button");
       cartBtn.type = "button";
       cartBtn.className = "icon-btn cart-btn";
       cartBtn.innerHTML = "&#128717;";
       cartBtn.setAttribute("aria-label", "Add to cart");
 
-      cartBtn.addEventListener("click", (e) => {
+      cartBtn.addEventListener("click", async (e) => {
         e.stopPropagation();
 
-        // Extract product data from card data attributes
-        const product = {
-          name: card.dataset.title || "Artwork",
-          artist: card.dataset.artist || "Unknown Artist",
-          price: Number((card.dataset.price || '0').toString().replace(/[^0-9.-]+/g, '')) || 0,
-          image: card.querySelector("img")?.src || "img/default.jpg",
-          id: card.dataset.id || card.dataset.title || (card.querySelector('img')?.src || '')
-        };
+        try {
+          await CartAPI.addToCart(artworkId, 1);
+          
+          // Visual feedback
+          cartBtn.classList.add('is-active');
+          setTimeout(() => cartBtn.classList.remove('is-active'), 500);
 
-        // Get existing cart from localStorage
-        let cart = JSON.parse(localStorage.getItem('artoSphereCart')) || [];
-
-        // Try to find by id first, then by name
-        let existingItem = cart.find(item => (item.id && product.id && item.id === product.id) || item.name === product.name);
-        if (existingItem) {
-          // increment quantity
-          existingItem.quantity = (Number(existingItem.quantity) || 1) + 1;
-        } else {
-          product.quantity = 1;
-          cart.push(product);
+          // Update cart counter
+          updateCartCounter();
+          alert('Added to cart!');
+        } catch (error) {
+          console.error('Error adding to cart:', error);
+          alert('Failed to add to cart');
         }
-
-        // Save updated cart to localStorage
-        localStorage.setItem('artoSphereCart', JSON.stringify(cart));
-
-        // Visual feedback
-        cartBtn.classList.add('is-active');
-        setTimeout(() => cartBtn.classList.remove('is-active'), 500);
-
-        // Update cart counter
-        updateCartCounter();
       });
 
       actions.appendChild(heartBtn);
@@ -212,10 +199,12 @@ function updateCartCounter() {
   });
 }
 
-// Update favorites counter (sum of favorited items)
+// Update favorites counter - will be called after API sync
 function updateFavoritesCounter(){
-  const favs = JSON.parse(localStorage.getItem('artoSphereFavorites')) || [];
-  const count = favs.length;
+  // This will be updated when favorites sync with API
+  // For now, just update from current DOM state
+  const cards = document.querySelectorAll('.photo-card[data-is-favorite="true"]');
+  const count = cards.length;
   const links = document.querySelectorAll('a[href="favourites.html"]');
   links.forEach(link => {
     const base = link.textContent.split('(')[0].trim();
@@ -223,72 +212,78 @@ function updateFavoritesCounter(){
   });
 }
 
-// Setup modal icons
+// Setup modal icons - Uses API for favorites and cart
 function setupModalIcons() {
+  const userId = "default-user";
   const modalHeartBtn = document.querySelector("#artModal .art-modal__actions .heart-btn");
   const modalCartBtn = document.querySelector("#artModal .art-modal__actions .cart-btn");
+  const artworkId = Number(document.getElementById("artModalTitle")?.dataset.artworkId || 0);
 
   if (modalHeartBtn) {
-    // set initial state for modal heart
-    try {
-      const favs = JSON.parse(localStorage.getItem('artoSphereFavorites')) || [];
-      const title = document.getElementById("artModalTitle")?.textContent || '';
-      const mid = title || document.getElementById("artModalImage")?.src || '';
-      const found = favs.find(it => (it.id && it.id === mid) || it.name === title);
-      if (found) modalHeartBtn.classList.add('is-active'); else modalHeartBtn.classList.remove('is-active');
-    } catch(e) {}
+    // Set initial state
+    const card = document.querySelector(`.photo-card[data-id="${artworkId}"]`);
+    if (card?.dataset.isFavorite === 'true') {
+      modalHeartBtn.classList.add('is-active');
+    } else {
+      modalHeartBtn.classList.remove('is-active');
+    }
 
-    modalHeartBtn.addEventListener("click", (e) => {
+    modalHeartBtn.addEventListener("click", async (e) => {
       e.stopPropagation();
-      // Toggle favorite for currently open modal item
-      const favKey = 'artoSphereFavorites';
-      const title = document.getElementById("artModalTitle")?.textContent || '';
-      const artist = document.getElementById("artModalArtist")?.textContent || '';
-      const image = document.getElementById("artModalImage")?.src || '';
-      const price = (document.getElementById("artModalPrice")?.textContent || '').replace('$','');
-      const product = { id: title || image, name: title, artist, image, price };
-      let favs = JSON.parse(localStorage.getItem(favKey)) || [];
-      const idx = favs.findIndex(it => (it.id && product.id && it.id === product.id) || it.name === product.name);
-      if (idx >= 0) { favs.splice(idx,1); modalHeartBtn.classList.remove('is-active'); }
-      else { favs.push(product); modalHeartBtn.classList.add('is-active'); }
-      localStorage.setItem(favKey, JSON.stringify(favs));
-      try{ updateFavoritesCounter(); }catch(e){}
+      
+      if (modalHeartBtn.classList.contains('is-active')) {
+        // Remove from favorites
+        const card = document.querySelector(`.photo-card[data-id="${artworkId}"]`);
+        const favoriteId = card?.dataset.favoriteId;
+        if (favoriteId) {
+          try {
+            await FavoritesAPI.removeFromFavorites(Number(favoriteId));
+            modalHeartBtn.classList.remove('is-active');
+            if (card) {
+              card.dataset.isFavorite = 'false';
+            }
+          } catch (error) {
+            console.error('Error removing from favorites:', error);
+            alert('Failed to remove from favorites');
+          }
+        }
+      } else {
+        // Add to favorites
+        try {
+          const favorite = await FavoritesAPI.addToFavorites(artworkId);
+          modalHeartBtn.classList.add('is-active');
+          const card = document.querySelector(`.photo-card[data-id="${artworkId}"]`);
+          if (card) {
+            card.dataset.isFavorite = 'true';
+            card.dataset.favoriteId = favorite.id;
+          }
+        } catch (error) {
+          console.error('Error adding to favorites:', error);
+          alert('Failed to add to favorites');
+        }
+      }
+      updateFavoritesCounter();
     });
   }
 
   if (modalCartBtn) {
-    modalCartBtn.addEventListener("click", (e) => {
+    modalCartBtn.addEventListener("click", async (e) => {
       e.stopPropagation();
       
-      // Get the currently open modal's product data
-      const product = {
-        name: document.getElementById("artModalTitle").textContent || "Artwork",
-        artist: document.getElementById("artModalArtist").textContent || "Unknown Artist",
-        price: Number((document.getElementById("artModalPrice").textContent || '0').toString().replace(/[^0-9.-]+/g, '')) || 0,
-        image: document.getElementById("artModalImage").src || "img/default.jpg",
-        id: document.getElementById("artModalTitle").textContent || Date.now()
-      };
+      try {
+        await CartAPI.addToCart(artworkId, 1);
+        
+        // Visual feedback
+        modalCartBtn.classList.add('is-active');
+        setTimeout(() => modalCartBtn.classList.remove('is-active'), 500);
 
-      // Get existing cart from localStorage
-      let cart = JSON.parse(localStorage.getItem('artoSphereCart')) || [];
-      // Try to find existing item by id or name
-      let existingItem = cart.find(item => (item.id && product.id && item.id === product.id) || item.name === product.name);
-      if (existingItem) {
-        existingItem.quantity = (Number(existingItem.quantity) || 1) + 1;
-      } else {
-        product.quantity = 1;
-        cart.push(product);
+        // Update cart counter
+        updateCartCounter();
+        alert('Added to cart!');
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+        alert('Failed to add to cart');
       }
-
-      // Save updated cart to localStorage
-      localStorage.setItem('artoSphereCart', JSON.stringify(cart));
-
-      // Visual feedback
-      modalCartBtn.classList.add('is-active');
-      setTimeout(() => modalCartBtn.classList.remove('is-active'), 500);
-
-      // Update cart counter
-      updateCartCounter();
     });
   }
 }

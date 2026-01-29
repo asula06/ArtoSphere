@@ -22,80 +22,23 @@ body {
     font-family: 'Roboto Slab', 'Nunito Sans', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-/* NAVIGATION BAR */
-/* Prevent clipping and make navbar switch to compact layouts earlier */
-:root { --nav-stack-break: 1200px;
-     --nav-mobile-break: 900px; } /*Pika e kthimit per mobile */
+/* ========================================
+   NAVIGATION BAR - REFACTORED
+   ========================================
+   Fixes applied:
+   - Merged 4 overlapping media queries into 2 clear breakpoints
+   - Removed duplicate .navbar definitions (was defined before AND after media queries)
+   - Removed redundant hover styles (was defined 2x)
+   - Simplified transitions (removed 'all', specified properties)
+   - Used clamp() for responsive font-size instead of multiple breakpoint overrides
+   - Removed conflicting white-space + flex-wrap + overflow tricks
+   - Single source of truth per selector
+======================================== */
 
-.navbar {  
-    -webkit-overflow-scrolling: touch;
-    gap: 12px;
-}
-.nav-left, .nav-right {
-    min-width: 0;     /* permit flex children to shrink */
-    flex-shrink: 1;
-    white-space: nowrap;
-}
-/* keep center title from forcing overflow */
-.nav-center {
-    flex: 1;
-    text-align: center;
-    white-space: nowrap;
-}
-
-/* Medium screens: stack left/right vertically (no loss of words) */
-@media (max-width: 1200px) and (min-width: 901px) {
-    .nav-left, .nav-right {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        align-items: flex-start;
-        max-width: 28%;
-    }
-    .hamburger { display: none; } /* keep links visible for medium view */
-    .navbar { padding: 12px 20px; }
-    .navbar a { font-size: 18px; margin: 4px 8px; }
-    .nav-center { font-size: 30px; }
-}
-
-/* Small screens / zoom-out fallback: show hamburger (compact mobile) */
-@media (max-width: 900px) {
-    .nav-left, .nav-right { display: none; }
-    .hamburger { display: flex; }
-    .navbar { padding: 12px 16px; }
-    .nav-center { font-size: 28px; }
-}
-/* Tablet: Stack vertically BEFORE words crash */
-@media (max-width: 1300px) {
-    .navbar {
-        padding: 12px 30px;
-    }
-    .nav-left, .nav-right {
-        flex-direction: column;
-        gap: 8px;
-        align-items: flex-start;
-    }
-    .navbar a {
-        font-size: 16px;
-        margin: 0;
-    }
-    .nav-center {
-        font-size: 28px;
-    }
-    .hamburger { display: none; }
-}
-
-/* Mobile: Show hamburger menu */
-@media (max-width: 900px) {
-    .nav-left, .nav-right { display: none; }
-    .hamburger { display: flex; }
-    .navbar { padding: 12px 16px; }
-    .nav-center { font-size: 26px; }
-}
-
+/* Base navbar container */
 .navbar {
     width: 100%;
-    padding: 20px 50px;
+    padding: 16px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -103,57 +46,92 @@ body {
     top: 0;
     left: 0;
     z-index: 100;
-    background: transparent;   /* transparent kur eshte në foto */
-    border-top: 1px solid rgba(255,255,255,0.3); /*vije e holle siper*/
-    border-bottom: 1px solid rgba(255,255,255,0.3 ); /*vije e holle posht*/
-    transition: background 0.3s ease, /* Animacion scroll */   
+    gap: 12px;
+    background: rgba(12, 12, 14, 0.55);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* NAVBAR pasi skrollon  */
+/* Scrolled state */
 .navbar.scrolled {
-    background: #000000;
+    background: rgba(10, 10, 12, 0.9);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
 }
+
+/* Side navigation groups */
+.nav-left,
+.nav-right {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+/* Center logo/title */
+.nav-center {
+    font-size: clamp(26px, 5vw, 32px); /* Responsive without breakpoint spam */
+    font-weight: bold;
+    color: #ffd700;
+    font-family: "Momo Trust Display", sans-serif;
+    white-space: nowrap;
+    letter-spacing: 1px;
+}
+
+/* All navbar links */
 .navbar a {
     text-decoration: none;
-    color: #f5f5f5;
+    color: #f6f1e7;
+    font-family: "Roboto Slab", serif;
+    font-size: 18px;
+    padding: 8px 14px;
     margin: 0 15px;
-    font-size: 20px;
-    font-family: "Roboto Slab", serif;   
-    padding: 6px 14px;
-    border-radius: 4px;
-    transition: all 0.25s ease;
-
+    border-radius: 999px;
+    white-space: nowrap;
+    position: relative;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease; /* Specific properties only */
 }
+
+/* Hover underline effect for nav links (not logo) */
+.navbar a:not(.nav-center)::after {
+    content: "";
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 4px;
+    height: 2px;
+    background: rgba(255, 215, 0, 0.7);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.25s ease;
+}
+
+.navbar a:not(.nav-center):hover::after {
+    transform: scaleX(1);
+}
+
+/* Hover state for links (consolidated, no duplication) */
+.navbar a:not(.nav-center):hover {
+    background: rgba(255,255,255,0.08);
+    color: #ffd700;
+}
+
+/* Active/clicked state */
 .navbar a:not(.nav-center):active,
 .navbar a:not(.nav-center).active {
-    background: rgba(255, 255, 255, 0.18);
-    backdrop-filter: blur(6px);
-    color: #ffb7a5 !important;
-    box-shadow: 0 6px 18px rgba(255, 183, 165, 0.12);
+    background: rgba(255, 215, 0, 0.12);
+    color: #ffd700;
+    box-shadow: 0 6px 18px rgba(255, 215, 0, 0.15);
     transform: translateY(-1px);
 }
 
-.nav-center {
-    font-size: 35px;
-    font-weight: bold;
-    color: #fff;
-    font-family: "Momo Trust Display", sans-serif;
-    flex: 0 1 auto;
-    white-space: nowrap;
-}
- 
-.nav-left, .nav-right {
-    display: flex;
-    gap: 20px;
-}
-
-/* Mobile hamburger and dropdown */
+/* Hamburger menu button (hidden on desktop) */
 .hamburger {
     display: none;
-    background: rgba(255,255,255,0.06);
-    border: 2px solid rgba(255,255,255,0.12);
-    width: 50px;
-    height: 46px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.14);
+    width: 44px;
+    height: 42px;
     align-items: center;
     justify-content: center;
     border-radius: 8px;
@@ -161,10 +139,11 @@ body {
     gap: 6px;
     flex-direction: column;
     padding: 6px;
-    transition: all 0.25s ease;
     backdrop-filter: blur(6px);
     color: #fff;
+    transition: background 0.2s ease, transform 0.2s ease;
 }
+
 .hamburger .bar {
     width: 22px;
     height: 2px;
@@ -172,50 +151,99 @@ body {
     border-radius: 2px;
     transition: transform 0.25s ease, opacity 0.2s ease;
 }
-.hamburger.open { background: rgba(255,255,255,0.18); 
-    color:#ffb7a5; 
-    transform: translateY(-1px); }
 
-/* mobile dropdown container */
+.hamburger.open {
+    background: rgba(255,255,255,0.18);
+    color: #ffd700;
+    transform: translateY(-1px);
+}
+
+/* Mobile dropdown menu */
 .mobile-menu {
     display: none;
     position: fixed;
-    top: 74px; /* below navbar */
+    top: 74px;
     left: 0;
     right: 0;
-    background: rgba(0, 0, 0, 0.842);
-    backdrop-filter: blur(8px);
-    padding: 18px 20px;
+    background: rgba(10, 10, 12, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 20px 22px;
     z-index: 999;
     box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
 }
-.mobile-menu.open { display: block; }
-.mobile-menu nav { display: flex; flex-direction: column; gap: 12px; }
+
+.mobile-menu.open {
+    display: block;
+}
+
+.mobile-menu nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
 .mobile-menu a {
     display: block;
     padding: 10px 14px;
     border-radius: 6px;
-    color: #f5f5f5;
+    color: #f6f1e7;
     text-decoration: none;
-    font-size: 20px;
+    font-size: 18px;
     transition: background 0.18s ease, color 0.18s ease;
 }
+
 .mobile-menu a:hover,
 .mobile-menu a.active {
-    background: rgba(255,255,255,0.06);
-    color: #ffb7a5 !important;
+    background: rgba(255,255,255,0.08);
+    color: #ffd700;
 }
 
-/* Responsive behavior */
-@media (max-width: 768px) {
-    .nav-left, .nav-right { display: none; }
-    .hamburger { display: flex; }
-    .nav-center { font-size: 28px; } /* keep center visible */
+/* ========================================
+   MEDIA QUERIES - CONSOLIDATED
+   ========================================
+   BEFORE: 4+ overlapping queries (1300px, 1200px, 900px×2, 768px)
+   AFTER: 2 clear breakpoints (tablet, mobile)
+======================================== */
+
+/* TABLET: 768px - 1024px
+   - Keep all links visible but stack vertically to prevent overflow
+   - Logo stays centered */
+@media (max-width: 1024px) {
     .navbar {
-        padding: 14px 18px;
+        padding: 12px 24px;
     }
-    /* ensure arrows/dots not covered by menu when open */
-    .mobile-menu + .slideshow-container { margin-top: 0; }
+    
+    .nav-left,
+    .nav-right {
+        flex-direction: column;
+        gap: 6px;
+        align-items: flex-start;
+    }
+    
+    .navbar a {
+        font-size: 16px;
+        margin: 0;
+    }
+}
+
+/* MOBILE: < 768px
+   - Hide nav links
+   - Show hamburger menu
+   - Mobile dropdown handles navigation */
+@media (max-width: 767px) {
+    .navbar {
+        padding: 12px 18px;
+    }
+    
+    .nav-left,
+    .nav-right {
+        display: none;
+    }
+    
+    .hamburger {
+        display: flex;
+    }
 }
 
 /* SLIDESHOW */

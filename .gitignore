@@ -1,0 +1,70 @@
+# .NET / C# Build artifacts
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.swp
+*.swo
+*~
+
+# Visual Studio / Rider
+.vs/
+.vscode/
+.idea/
+*.DotSettings.user
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# ASP.NET / Entity Framework
+*.dbmdl
+*.jfm
+project.lock.json
+project.fragment.lock.json
+artifacts/
+Migrations/*.Designer.cs
+
+# NuGet packages
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+*.coverage
+
+# Logs
+*.log
+logs/
+api.log
+
+# Environment & secrets
+appsettings.Development.json
+appsettings.Local.json
+*.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Node modules (if frontend tools are added later)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Temporary test files
+test-*.html

@@ -77,11 +77,7 @@ body {
     opacity: 0.95;
     font-family: "Roboto Slab", serif;
 }
-/*NAVBAR after scrolling*/
-  .navbar.scrolled {
-    background: rgba(0, 0, 0, 0.5); /*Dark background after scrolling */
-    backdrop-filter: blur(4px); /*Blur effect. */
-  }
+
 
   .about-section {
     display: flex;
