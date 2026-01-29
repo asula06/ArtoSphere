@@ -21,9 +21,10 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Add DbContext with in-memory database for development
+// Add DbContext with MySQL database
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseInMemoryDatabase("ArtoSphereDb"));
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 // Register services for dependency injection
 // Controllers will use these services instead of accessing DbContext directly
