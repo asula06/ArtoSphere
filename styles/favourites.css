@@ -6,46 +6,51 @@
 }
 
 body{
-  background: #0f0f10;
+  background: #f7e9d3;
   font-family: "Playfair Display", serif;
 }
 
-/* HERO IMAGE */
-.hero-collection {
+/* HERO/HEADER IMAGE */
+.header-bg {
     position: relative;
     width: 100%;
-    height: 380px;
+    height: 400px;
     overflow: hidden;
+    margin-bottom: 0;
 }
 
+.header-bg .header-image,
 .hero-collection img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    filter: brightness(0.5);
 }
 
+.header-bg .center-content,
 .hero-collection h1 {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #e7d1a2;
-    font-size: 3.5rem;
-    text-shadow: 0px 2px 4px rgba(0,0,0,0.4);
-    font-family: "Playfair Display", serif;
+    color: #ffd700;
+    text-align: center;
 }
 
-.text-over-image{
-    position: absolute;
-    top: 80%;
-    left: 50%;
-  transform: translate(-50%,-50%);
-    color: #e7d1a2;
-    text-align: center;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    font-size: 300%;
-    text-shadow: 2px 2px 5px rgba(247, 244, 244, 0.7);
- font-weight: bold;
+.header-bg .center-content h1,
+.hero-collection h1 {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    text-shadow: 0px 4px 12px rgba(0,0,0,0.8);
+    font-family: "Playfair Display", serif;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.header-bg .center-content p {
+    font-size: 1.1rem;
+    color: #e0e0e0;
+    font-family: "Roboto Slab", serif;
+    text-shadow: 0px 2px 6px rgba(0,0,0,0.6);
 }
 /* NAVIGATION BAR */
 /* Prevent clipping and make navbar switch to compact layouts earlier */
@@ -120,7 +125,7 @@ body{
 
 .navbar {
     width: 100%;
-    padding: 20px 50px;
+    padding: 16px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -128,44 +133,69 @@ body{
     top: 0;
     left: 0;
     z-index: 100;
-    background: transparent;   /* transparent kur eshte në foto */
-    border-top: 1px solid rgba(255,255,255,0.3); /*vije e holle siper*/
-    border-bottom: 1px solid rgba(255,255,255,0.3 ); /*vije e holle posht*/
-    transition: background 0.3s ease, /* Animacion scroll */   
+    background: rgba(12, 12, 14, 0.55);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* NAVBAR pasi skrollon  */
+/* NAVBAR after scroll */
 .navbar.scrolled{
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
+    background: rgba(10, 10, 12, 0.9);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
 }
 .navbar a {
     text-decoration: none;
-    color: #f5f5f5;
+    color: #f6f1e7;
     margin: 0 15px;
-    font-size: 20px;
+    font-size: 18px;
     font-family: "Roboto Slab", serif;   
-    padding: 6px 14px;
-    border-radius: 4px;
+    padding: 8px 14px;
+    border-radius: 999px;
     transition: all 0.25s ease;
-
+    position: relative;
 }
+
+/* Underline effect on hover */
+.navbar a:not(.nav-center)::after {
+    content: "";
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 4px;
+    height: 2px;
+    background: rgba(255, 215, 0, 0.7);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.25s ease;
+}
+
+.navbar a:not(.nav-center):hover::after {
+    transform: scaleX(1);
+}
+
+.navbar a:not(.nav-center):hover {
+    background: rgba(255,255,255,0.08);
+    color: #ffd700;
+}
+
 .navbar a:not(.nav-center):active,
 .navbar a:not(.nav-center).active {
-    background: rgba(255, 255, 255, 0.18);
-    backdrop-filter: blur(6px);
-    color: #ffb7a5 !important;
-    box-shadow: 0 6px 18px rgba(255, 183, 165, 0.12);
+    background: rgba(255, 215, 0, 0.12);
+    color: #ffd700;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.1);
     transform: translateY(-1px);
 }
 
 .nav-center {
-    font-size: 35px;
+    font-size: clamp(26px, 5vw, 32px);
     font-weight: bold;
-    color: #fff;
+    color: #ffd700;
     font-family: "Momo Trust Display", sans-serif;
     flex: 0 1 auto;
     white-space: nowrap;
+    letter-spacing: 1px;
 }
  
 .nav-left, .nav-right {
@@ -236,29 +266,15 @@ body{
 @media (max-width: 768px) {
     .nav-left, .nav-right { display: none; }
     .hamburger { display: flex; }
-    .nav-center { font-size: 28px; } /* keep center visible */
+    .nav-center { font-size: 28px; }
     .navbar {
         padding: 14px 18px;
     }
-    /* ensure arrows/dots not covered by menu when open */
-    .mobile-menu + .slideshow-container { margin-top: 0; }
-}
-/* Efekti i hover-it per linket e navbar-it */
-.navbar a:not(.nav-center) {
-    padding: 6px 14px;
-    border-radius: 4px;
-    transition: all 0.25s ease;
 }
 
-/* Efekti kur kalon maus-in siper ketyre linkeve te navbar-it */
-.navbar a:not(.nav-center):hover {
-    background: rgba(255, 255, 255, 0.18);  /* e bardhë transparente */
-    backdrop-filter: blur(6px);             /* glass effect premium */
-    color: #ffb7a5 !important;              /* Gold Rose *//* !important siguron që ngjyra te mos mbivendoset nga CSS të tjera */
-}
 /* Hide scrollbar track but keep scrolling functionality */
 ::-webkit-scrollbar {
-    width: 0;  /* hide scrollbar width */
+    width: 0;
 }
 /* NAV IMMMMMMM*/
 body {
@@ -348,25 +364,33 @@ top: auto;
 .dropdown:hover .dropdown-menu{
     display: block;
 }
-/* PHOTOS */
+/* FAVORITES GRID */
+.favorites-grid,
 .card-container{
   max-width: 1200px;
-  margin: 30px auto 50px;
+  margin: 80px auto 50px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  grid-auto-rows: 220px;
-  grid-auto-flow: dense;
-  gap: 36px;              
-  padding: 0 24px;        
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  padding: 40px 24px;
 }
-/* karta bazë */
+
+/* Photo card styling for favorites */
 .photo-card{
-  background: transparent;
-  border-radius: 6px;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   cursor: pointer;
   display: flex;
   flex-direction: column;
   position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.photo-card:hover{
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
 }
 /* Karta Maestà */
 .maesta-card{
@@ -395,73 +419,205 @@ top: auto;
 .thumb{
   position: relative;
   overflow: hidden;
-  border-radius: 6px;
-  flex: 1 1 auto;
   width: 100%;
-  height: 100%;
+  height: 280px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #f0f0f0;
 }
+
 .thumb img{
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
   display: block;
-  transition: transform .4s ease;
+  transition: transform 0.4s ease;
 }
+
 .photo-card:hover .thumb img{
-  transform: scale(1.06);
+  transform: scale(1.08);
 }
+
 .overlay{
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity .25s ease, transform .25s ease;
-  transform: translateY(6px);
+  transition: opacity 0.3s ease;
   z-index: 1; 
 }
+
 .photo-card:hover .overlay{
   opacity: 1;
-  transform: translateY(0);
 }
+
 .view-text{
-  padding: 8px 16px;
-  border-radius: 4px;
-  border: 1px solid rgba(255,255,255,0.4);
-  background: rgba(0,0,0,0.25);
-  color: #f9c679;
-  letter-spacing: 1px;
+  padding: 10px 24px;
+  border-radius: 6px;
+  border: 2px solid #fff;
+  background: rgba(0,0,0,0.3);
+  color: #fff;
+  letter-spacing: 2px;
   text-transform: uppercase;
   font-weight: 700;
+  font-size: 14px;
 }
-.card-body{
-  padding-top: 8px;
+
+/* Card Info Section */
+.card-info {
+  padding: 20px;
+  background: #fff;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
+
 .card-title{
-  font-size: 1.00rem;
-  color:#5E5033;
-  margin-bottom: 4px;
+  font-size: 1.35rem;
+  color: #2c2c2c;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  line-height: 1.3;
 }
+
+.card-artist{
+  font-size: 1rem;
+  color: #666;
+  font-style: italic;
+  margin: 0;
+}
+
 .card-category{
   font-size: 0.9rem;
-  color:#5E5033;
+  color: #8C7A5B;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  margin: 4px 0;
 }
+
+.card-description{
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.6;
+  margin: 8px 0;
+  flex: 1;
+}
+
+.card-price{
+  font-size: 1.5rem;
+  color: #C5A46E;
+  font-weight: 700;
+  margin: 12px 0 8px 0;
+}
+
+/* Card Actions */
+.card-actions{
+  display: flex;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #e8e8e8;
+}
+
+.heart-btn,
+.cart-btn{
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  background: #f5f5f5;
+  color: #333;
+}
+
+.heart-btn{
+  background: #fff;
+  border: 2px solid #e8e8e8;
+  color: #999;
+}
+
+.heart-btn:hover{
+  background: #ffe5e5;
+  color: #ff4444;
+  border-color: #ff4444;
+  transform: scale(1.05);
+}
+
+.heart-btn.is-active{
+  background: #ff4444;
+  color: #fff;
+  border-color: #ff4444;
+}
+
+.heart-btn.is-active:hover{
+  background: #cc0000;
+  border-color: #cc0000;
+}
+
+.cart-btn{
+  background: #C5A46E;
+  color: #fff;
+  border: 2px solid #C5A46E;
+}
+
+.cart-btn:hover{
+  background: #a88a59;
+  border-color: #a88a59;
+  transform: scale(1.05);
+}
+
+.heart-btn svg,
+.cart-btn svg{
+  width: 20px;
+  height: 20px;
+}
+
+/* Disabled state */
+.heart-btn:disabled,
+.cart-btn:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+/* Responsive - Mobile */
 @media (max-width: 768px){
-  .image-container{
-    height: 260px;
-  }
-  .text-over-image{
-    font-size: 32px;
-  }
+  .favorites-grid,
   .card-container{
     grid-template-columns: 1fr;
-    grid-auto-rows: 260px;
+    padding: 20px 16px;
+    margin-top: 100px;
+    gap: 24px;
+  }
+  
+  .thumb{
+    height: 240px;
+  }
+  
+  .card-title{
+    font-size: 1.2rem;
+  }
+  
+  .card-actions{
+    flex-direction: column;
+  }
+  
+  .heart-btn,
+  .cart-btn{
+    width: 100%;
   }
 }
 body.category-view .card-container{

@@ -2,6 +2,9 @@
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('Collection page loaded');
     
+    // Add icons to static HTML cards that don't have them
+    addIconsToStaticCards();
+    
     // Load artworks from API
     await loadArtworksFromAPI();
     
@@ -14,6 +17,49 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Setup image modal
     setupImageModal();
 });
+
+// Add heart and cart icons to static HTML cards
+function addIconsToStaticCards() {
+    const cards = document.querySelectorAll('.photo-card');
+    let cardIdCounter = 1;
+    
+    cards.forEach(card => {
+        // Check if card already has card-actions
+        if (card.querySelector('.card-actions')) {
+            return; // Skip if already has icons
+        }
+        
+        // Ensure card has a data-id attribute
+        if (!card.getAttribute('data-id')) {
+            card.setAttribute('data-id', cardIdCounter++);
+        }
+        
+        // Create card actions
+        const actions = document.createElement('div');
+        actions.className = 'card-actions';
+        
+        const heartBtn = document.createElement('button');
+        heartBtn.className = 'heart-btn';
+        heartBtn.setAttribute('aria-label', 'Add to favorites');
+        heartBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>';
+        actions.appendChild(heartBtn);
+        
+        const cartBtn = document.createElement('button');
+        cartBtn.className = 'cart-btn add-to-cart-btn';
+        cartBtn.setAttribute('aria-label', 'Add to cart');
+        cartBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>';
+        actions.appendChild(cartBtn);
+        
+        // Insert after thumb, before card-body
+        const thumb = card.querySelector('.thumb');
+        const cardBody = card.querySelector('.card-body');
+        if (thumb && cardBody) {
+            cardBody.parentNode.insertBefore(actions, cardBody);
+        } else if (thumb) {
+            thumb.parentNode.insertBefore(actions, thumb.nextSibling);
+        }
+    });
+}
 
 // Load artworks from API
 async function loadArtworksFromAPI() {
@@ -34,12 +80,12 @@ async function loadArtworksFromAPI() {
         console.log('Artworks received:', artworks);
         
         if (!artworks || artworks.length === 0) {
-            console.warn('No artworks returned from API, showing empty message');
-            gallery.innerHTML = '<p>No artworks available</p>';
+            console.warn('No artworks returned from API - keeping static HTML cards');
+            // Don't clear gallery - keep the static HTML cards
             return;
         }
         
-        // Clear existing static cards
+        // Clear existing static cards only if we have API data
         gallery.innerHTML = '';
         
         // Create cards for each artwork
@@ -53,6 +99,8 @@ async function loadArtworksFromAPI() {
     } catch (error) {
         console.error('Error loading artworks:', error);
         console.error('Error stack:', error.stack);
+        console.warn('API failed - keeping static HTML cards as fallback');
+        // Don't clear the gallery on error - keep static cards
     }
 }
 
@@ -97,17 +145,23 @@ function createArtworkCard(artwork) {
     
     card.appendChild(thumb);
     
+    // Create card body wrapper
+    const cardBody = document.createElement('div');
+    cardBody.className = 'card-body';
+    
     // Create title
     const titleEl = document.createElement('h3');
     titleEl.className = 'card-title';
     titleEl.textContent = artwork.title;
-    card.appendChild(titleEl);
+    cardBody.appendChild(titleEl);
     
     // Create category
     const categoryEl = document.createElement('p');
     categoryEl.className = 'card-category';
     categoryEl.textContent = artwork.category;
-    card.appendChild(categoryEl);
+    cardBody.appendChild(categoryEl);
+    
+    card.appendChild(cardBody);
     
     // Create card actions
     const actions = document.createElement('div');
@@ -199,49 +253,87 @@ function setupCardIcons() {
     
     console.log('Setting up card interactions');
     
-    // Heart buttons (favorites)
-    gallery.querySelectorAll('.heart-btn').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
+    // Use event delegation for dynamically added cards
+    gallery.addEventListener('click', async (e) => {
+        const heartBtn = e.target.closest('.heart-btn');
+        const cartBtn = e.target.closest('.cart-btn');
+        
+        // Handle heart button click
+        if (heartBtn) {
             e.preventDefault();
-            const artworkId = parseInt(btn.closest('.photo-card').getAttribute('data-id'));
+            e.stopPropagation();
+            const card = heartBtn.closest('.photo-card');
+            const artworkId = card.getAttribute('data-id');
+            
+            if (!artworkId) {
+                console.error('No artwork ID found on card');
+                alert('❌ Error: Artwork ID not found');
+                return;
+            }
+            
+            // Disable button to prevent double clicks
+            heartBtn.disabled = true;
             
             try {
-                const result = await FavoritesAPI.addToFavorites(artworkId);
+                console.log('Adding to favorites, artwork ID:', artworkId);
+                const result = await FavoritesAPI.addToFavorites(parseInt(artworkId));
 
                 if (result?.status === 'added') {
-                    btn.classList.add('liked');
-                    alert('Added to favorites!');
+                    heartBtn.classList.add('is-favorite');
+                    alert('✅ Added to favorites! ❤️');
                 } else if (result?.status === 'exists') {
-                    btn.classList.add('liked');
-                    alert('This artwork is already in your favorites');
+                    heartBtn.classList.add('is-favorite');
+                    alert('ℹ️ This artwork is already in your favorites');
                 } else {
-                    alert(result?.message || 'Error adding to favorites');
+                    alert('❌ ' + (result?.message || 'Error adding to favorites'));
+                    console.error('Favorites error:', result);
                 }
             } catch (error) {
                 console.error('Favorites error:', error);
-                alert('Please login to add to favorites');
+                alert('❌ Error adding to favorites. Please make sure the API is running.');
+            } finally {
+                // Re-enable button
+                heartBtn.disabled = false;
             }
-        });
-    });
-    
-    // Cart buttons
-    gallery.querySelectorAll('.cart-btn').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
+        }
+        
+        // Handle cart button click
+        if (cartBtn) {
             e.preventDefault();
-            const artworkId = parseInt(btn.getAttribute('data-id'));
+            e.stopPropagation();
+            const card = cartBtn.closest('.photo-card');
+            const artworkId = card.getAttribute('data-id');
+            
+            if (!artworkId) {
+                console.error('No artwork ID found on card');
+                alert('❌ Error: Artwork ID not found');
+                return;
+            }
+            
+            // Disable button to prevent double clicks
+            cartBtn.disabled = true;
             
             try {
-                const result = await CartAPI.addToCart(artworkId, 1);
+                console.log('Adding to cart, artwork ID:', artworkId);
+                const result = await CartAPI.addToCart(parseInt(artworkId), 1);
                 if (result?.status === 'added') {
-                    alert('Added to cart!');
+                    alert('✅ Added to cart! 🛒');
+                    // Update cart counter if function exists
+                    if (typeof updateCartCounter === 'function') {
+                        updateCartCounter();
+                    }
                 } else {
-                    alert(result?.message || 'Error adding to cart');
+                    alert('❌ ' + (result?.message || 'Error adding to cart'));
+                    console.error('Cart error:', result);
                 }
             } catch (error) {
                 console.error('Cart error:', error);
-                alert('Please login to add to cart');
+                alert('❌ Error adding to cart. Please make sure the API is running.');
+            } finally {
+                // Re-enable button
+                cartBtn.disabled = false;
             }
-        });
+        }
     });
 }
 

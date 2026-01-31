@@ -179,20 +179,30 @@ const FavoritesAPI = {
                     const errorData = await response.json();
                     errorMessage = errorData.detail || errorData.message || JSON.stringify(errorData);
                 } else {
-                    errorMessage = await response.text() || errorMessage;
+                    const textError = await response.text();
+                    errorMessage = textError || errorMessage;
                 }
             } catch (e) {
-                // If parsing fails, use generic message
+                console.error("Error parsing response:", e);
             }
 
-            if (response.status === 400 && errorMessage.toLowerCase().includes("already in favorites")) {
-                return { status: "exists", message: errorMessage };
+            // Check for "already in favorites" error
+            if (response.status === 400 && (
+                errorMessage.toLowerCase().includes("already in favorites") ||
+                errorMessage.toLowerCase().includes("already exists")
+            )) {
+                return { status: "exists", message: "This artwork is already in your favorites" };
+            }
+
+            // Check for "not found" errors (artwork doesn't exist)
+            if (response.status === 404 || errorMessage.toLowerCase().includes("not found")) {
+                return { status: "error", message: "Artwork not found" };
             }
 
             return { status: "error", message: errorMessage };
         } catch (error) {
             console.error("Error adding to favorites:", error);
-            return { status: "error", message: error.message || "Failed to add to favorites" };
+            return { status: "error", message: error.message || "Failed to add to favorites. Please try again." };
         }
     },
 
